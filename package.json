@@ -5,8 +5,9 @@
     "repository": {
         "url": "https://github.com/arynxd/zeppelin-tag-language-features"
     },
+    "icon": "media/icon.png",
     "publisher": "arynxd",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "engines": {
         "vscode": "^1.63.0"
     },

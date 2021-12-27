@@ -11,9 +11,3 @@ Syntax highlighting for Zeppelin tags. This was designed for The Coding Den Disc
 
 None so far!
 
-## Release Notes
-
-### 1.0.0
-
-Initial release
-
