@@ -3,3 +3,9 @@
 .gitignore
 vsc-extension-quickstart.md
 sample/
+src/**
+.yarnrc
+**/tsconfig.json
+**/.eslintrc.json
+**/*.map
+**/*.ts
