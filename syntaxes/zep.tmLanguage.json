@@ -1,0 +1,122 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Zeppelin Tag",
+  "patterns": [
+    {
+      "include": "#lang"
+    }
+  ],
+  "repository": {
+    "lang": {
+      "patterns": [
+        {
+          "begin": "\\{",
+          "beginCaptures": {
+            "1": { "name": "punctuation.other.bracket.curly.begin.zep" }
+          },
+          "end": "\\}",
+          "endCaptures": {
+            "1": { "name": "punctuation.other.bracket.curly.end.zep" }
+          },
+
+          "patterns": [{ "include": "#root" }]
+        }
+      ]
+    },
+    "func-args": {
+      "patterns": [
+        {
+          "begin": "\\b([a-zA-Z_]\\w*)(?:\\s*(:(?!:)|=(?![=>]))|\\b)",
+          "beginCaptures": {
+            "1": { "name": "variable.parameter.zep" },
+            "2": { "name": "keyword.operator.zep" }
+          },
+          "end": "(?=[,)])",
+          "patterns": [{ "include": "#root" }]
+        },
+        { "include": "#root" }
+      ]
+    },
+    "root": {
+      "patterns": [
+        {
+          "comment": "Comparison",
+          "name": "keyword.control.zep",
+          "match": "\\b(eq|gt|gte|lt|lte)\\b"
+        },
+
+        {
+          "comment": "Boolean",
+          "name": "keyword.control.zep",
+          "match": "\\b(and|or|not|if)\\b"
+        },
+
+        {
+          "comment": "Numeric",
+          "name": "keyword.control.zep",
+          "match": "\\b(add|sub|mul|div|round)\\b"
+        },
+
+        {
+          "comment": "Builtins",
+          "name": "keyword.control.zep",
+          "match": "\\b(slice|lower|upper|rand|cases|choice|tag|concat)\\b"
+        },
+
+        {
+          "comment": "Variable",
+          "name": "keyword.control.zep",
+          "match": "\\b(get|set|getr|setr)\\b"
+        },
+
+        {
+          "comment": "Math",
+          "name": "keyword.control.zep",
+          "match": "\\b(add|sub|mul|div|round)\\b"
+        },
+
+		{
+			"comment": "Magic values",
+			"name": "support.variable",
+			"match": "\\b(user|member|args)\\b"
+		},
+
+        {
+          "name": "constant.numeric.zep",
+          "match": "\\b\\d+(\\.\\d+)?"
+        },
+
+        {
+          "name": "string.quoted.double",
+          "begin": "\"",
+          "end": "\"",
+          "patterns": [
+            {
+              "include": "#string_escaped_char"
+            }
+          ]
+        },
+
+        {
+          "name": "string.quoted.single",
+          "begin": "'",
+          "end": "'",
+          "patterns": [
+            {
+              "include": "#string_escaped_char"
+            }
+          ]
+        }
+      ]
+    },
+    "string_escaped_char": {
+      "patterns": [
+        {
+          "match": "\\\\([0-7]{3}|[abfnrtv\\\\'\"]|x[0-9a-fA-F]{2}|u[0-9a-fA-F]{4}|U[0-9a-fA-F]{8})",
+          "name": "constant.character.escape.zep"
+        }
+      ]
+    }
+  },
+  "scopeName": "text.plain.tag"
+}

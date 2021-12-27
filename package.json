@@ -1,0 +1,25 @@
+{
+    "name": "zeppelin-tag-language-features",
+    "displayName": "Zeppelin Tag Language Features",
+    "description": "Provides language features for the zeppelin tag language",
+    "version": "0.0.1",
+    "engines": {
+        "vscode": "^1.63.0"
+    },
+    "categories": [
+        "Programming Languages"
+    ],
+    "contributes": {
+        "languages": [{
+            "id": "zep",
+            "aliases": ["Zeppelin Tag", "zep"],
+            "extensions": [".zep"],
+            "configuration": "./language-configuration.json"
+        }],
+        "grammars": [{
+            "language": "zep",
+            "scopeName": "text.plain.tag",
+            "path": "./syntaxes/zep.tmLanguage.json"
+        }]
+    }
+}
