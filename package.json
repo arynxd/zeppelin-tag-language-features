@@ -2,6 +2,10 @@
     "name": "zeppelin-tag-language-features",
     "displayName": "Zeppelin Tag Language Features",
     "description": "Provides language features for the zeppelin tag language",
+    "repository": {
+        "url": "https://github.com/arynxd/zeppelin-tag-language-features"
+    },
+    "publisher": "arynxd",
     "version": "0.0.1",
     "engines": {
         "vscode": "^1.63.0"
