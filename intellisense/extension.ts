@@ -6,6 +6,15 @@ import {
 } from "./providers";
 import { getCurrentWord, FILE_ID, COMPLETION_TOKEN } from "./util";
 
+interface Regex {
+  [key: string]: RegExp;
+}
+const REGEX: Regex = Object.freeze({
+  user: /user/g,
+  args: /args/g,
+  member: /member/g,
+});
+
 const COMPLETION_ITEMS: CompletionItems = Object.freeze({
   args: ["0", "1", "2", "3", "4", "5"],
   user: ["username", "id", "discriminator", "bot", "system", "publicFlags"],
@@ -17,29 +26,49 @@ interface CompletionItems {
 }
 
 function doCompletion(document: vscode.TextDocument, pos: vscode.Position) {
-  const word = getCurrentWord(document, pos);
+  const line = document.lineAt(pos.line).text;
+  const position = pos.character;
 
-  return (
-    COMPLETION_ITEMS[word]?.map(
+  for (const [key, regex] of Object.entries(REGEX)) {
+    let shouldComplete = false;
+    const matches = [...line.matchAll(regex)];
+
+    for (const match of matches) {
+      if (match.index == null) {
+        continue;
+      }
+
+      // check if we are actually completing, len + 1 for period char
+      if (match.index <= position && position <= match.index + key.length + 1) {
+        shouldComplete = true;
+      }
+    }
+
+    if (!shouldComplete) {
+      continue;
+    }
+
+    return COMPLETION_ITEMS[key].map(
       (item) => new vscode.CompletionItem(item, vscode.CompletionItemKind.Field)
-    ) ?? []
-  );
+    );
+  }
+
+  return [];
 }
 
 function argToString(arg: DocParam): string {
-  return `
-    \t${arg.name} => ${arg.type}
-  `;
+  return `${arg.name}: ${arg.type}`;
 }
 
-function docToString(doc: DocElement): string {
+function docToString(doc: DocElement, word: string): string {
   return `
     ${doc.description}
 
-    - arguments: ${
-      doc.args.length ? doc.args.map(argToString).join("\n") : "none"
+    ${word}${
+      doc.args.length ? "(" + doc.args.map(argToString).join(", ") + ")" : "()"
     }
-    - returns: ${doc.return}
+
+    returns: ${doc.return}
   `;
 }
 
@@ -48,7 +77,6 @@ function doHover(
   pos: vscode.Position
 ): vscode.Hover | undefined {
   const word = getCurrentWord(document, pos);
-
   const item = DOC_ITEMS[word];
 
   if (!item) {
@@ -56,7 +84,7 @@ function doHover(
   }
 
   return new vscode.Hover(
-    docToString(item),
+    docToString(item, word),
     document.getWordRangeAtPosition(pos)
   );
 }

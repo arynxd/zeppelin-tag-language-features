@@ -2,146 +2,337 @@ interface DocItems {
   [key: string]: DocElement;
 }
 
+type ValueType =
+  | "string"
+  | "number"
+  | "boolean"
+  | "member"
+  | "user"
+  | "any"
+  | "void";
 export interface DocParam {
   name: string;
-  type: string;
+  type: ValueType;
 }
 
 export interface DocElement {
   description: string;
   args: DocParam[];
-  return: string;
+  return: ValueType;
 }
 
 export const DOC_ITEMS: DocItems = Object.freeze({
   eq: {
-    description: "Undocumented",
-    args: [] as DocParam[],
-    return: "Undocumented",
+    description: "Checks if 2 values are equal",
+    args: [
+      {
+        name: "first",
+        type: "any",
+      },
+      {
+        name: "second",
+        type: "any",
+      },
+    ] as DocParam[],
+    return: "boolean",
   } as DocElement,
   gt: {
-    description: "Undocumented",
-    args: [] as DocParam[],
-    return: "Undocumented",
+    description: "Checks if first is greater than second",
+    args: [
+      {
+        name: "first",
+        type: "number",
+      },
+      {
+        name: "second",
+        type: "number",
+      },
+    ] as DocParam[],
+    return: "boolean",
   } as DocElement,
   gte: {
-    description: "Undocumented",
-    args: [] as DocParam[],
-    return: "Undocumented",
+    description: "Checks if first is greater than or equal to second",
+    args: [
+      {
+        name: "first",
+        type: "number",
+      },
+      {
+        name: "second",
+        type: "number",
+      },
+    ] as DocParam[],
+    return: "boolean",
   } as DocElement,
   lt: {
-    description: "Undocumented",
-    args: [] as DocParam[],
-    return: "Undocumented",
+    description: "Checks if first is less than second",
+    args: [
+      {
+        name: "first",
+        type: "number",
+      },
+      {
+        name: "second",
+        type: "number",
+      },
+    ] as DocParam[],
+    return: "boolean",
   } as DocElement,
   lte: {
-    description: "Undocumented",
-    args: [] as DocParam[],
-    return: "Undocumented",
+    description: "Checks if first is less than or equal to second",
+    args: [
+      {
+        name: "first",
+        type: "number",
+      },
+      {
+        name: "second",
+        type: "number",
+      },
+    ] as DocParam[],
+    return: "boolean",
   } as DocElement,
   and: {
-    description: "Undocumented",
-    args: [] as DocParam[],
-    return: "Undocumented",
+    description: "Checks if first and second are true",
+    args: [
+      {
+        name: "first",
+        type: "boolean",
+      },
+      {
+        name: "second",
+        type: "boolean",
+      },
+    ] as DocParam[],
+    return: "boolean",
   } as DocElement,
   or: {
-    description: "Undocumented",
-    args: [] as DocParam[],
-    return: "Undocumented",
+    description: "Checks if first or second is true",
+    args: [
+      {
+        name: "first",
+        type: "boolean",
+      },
+      {
+        name: "second",
+        type: "boolean",
+      },
+    ] as DocParam[],
+    return: "boolean",
   } as DocElement,
   not: {
-    description: "Undocumented",
-    args: [] as DocParam[],
-    return: "Undocumented",
+    description: "Inverts value",
+    args: [
+      {
+        name: "value",
+        type: "boolean",
+      },
+    ] as DocParam[],
+    return: "boolean",
   } as DocElement,
   if: {
-    description: "Undocumented",
-    args: [] as DocParam[],
-    return: "Undocumented",
+    description:
+      "Checks if cond is true, if so, execute true, otherwise execute false",
+    args: [
+      {
+        name: "cond",
+        type: "boolean",
+      },
+      {
+        name: "true",
+        type: "any",
+      },
+      {
+        name: "false",
+        type: "any",
+      },
+    ] as DocParam[],
+    return: "void",
   } as DocElement,
   add: {
-    description: "Undocumented",
-    args: [] as DocParam[],
-    return: "Undocumented",
+    description: "Adds all the numbers together",
+    args: [
+      {
+        name: "...numbers",
+        type: "number",
+      },
+    ] as DocParam[],
+    return: "number",
   } as DocElement,
   sub: {
-    description: "Undocumented",
-    args: [] as DocParam[],
-    return: "Undocumented",
+    description: "Subtracts all the numbers",
+    args: [
+      {
+        name: "...numbers",
+        type: "number",
+      },
+    ] as DocParam[],
+    return: "number",
   } as DocElement,
   mul: {
-    description: "Undocumented",
-    args: [] as DocParam[],
-    return: "Undocumented",
-  } as DocElement,
+    description: "Multiplies all the numbers together",
+    args: [
+      {
+        name: "...numbers",
+        type: "number",
+      },
+    ] as DocParam[],
+    return: "number",
+  },
   div: {
-    description: "Undocumented",
-    args: [] as DocParam[],
-    return: "Undocumented",
+    description: "Divides all the numbers",
+    args: [
+      {
+        name: "...numbers",
+        type: "number",
+      },
+    ] as DocParam[],
+    return: "number",
   } as DocElement,
   round: {
-    description: "Undocumented",
-    args: [] as DocParam[],
-    return: "Undocumented",
+    description: "Rounds num to the nearest integer",
+    args: [
+      {
+        name: "num",
+        type: "number",
+      },
+    ] as DocParam[],
+    return: "number",
   } as DocElement,
+
   slice: {
-    description: "Undocumented",
-    args: [] as DocParam[],
-    return: "Undocumented",
+    description: "Slices str between start and finish",
+    args: [
+      {
+        name: "str",
+        type: "string",
+      },
+      {
+        name: "start",
+        type: "number",
+      },
+      {
+        name: "end",
+        type: "number",
+      },
+    ] as DocParam[],
+    return: "string",
   } as DocElement,
   lower: {
-    description: "Undocumented",
-    args: [] as DocParam[],
-    return: "Undocumented",
+    description: "Makes str lower case",
+    args: [
+      {
+        name: "str",
+        type: "string",
+      },
+    ] as DocParam[],
+    return: "string",
   } as DocElement,
   upper: {
-    description: "Undocumented",
-    args: [] as DocParam[],
-    return: "Undocumented",
+    description: "Makes str upper case",
+    args: [
+      {
+        name: "str",
+        type: "string",
+      },
+    ] as DocParam[],
+    return: "string",
   } as DocElement,
   rand: {
-    description: "Undocumented",
+    description: "Generates a random number",
     args: [] as DocParam[],
-    return: "Undocumented",
+    return: "number",
   } as DocElement,
   cases: {
-    description: "Undocumented",
-    args: [] as DocParam[],
-    return: "Undocumented",
+    description: "Selects the item at idx from items",
+    args: [
+      {
+        name: "idx",
+        type: "number",
+      },
+      {
+        name: "..items",
+        type: "any",
+      },
+    ] as DocParam[],
+    return: "any",
   } as DocElement,
   choice: {
-    description: "Undocumented",
-    args: [] as DocParam[],
-    return: "Undocumented",
+    description: "Selects a random item from items",
+    args: [
+      {
+        name: "..items",
+        type: "any",
+      },
+    ] as DocParam[],
+    return: "any",
   } as DocElement,
   tag: {
-    description: "Undocumented",
-    args: [] as DocParam[],
-    return: "Undocumented",
+    description: "Renders the text stored in tag name",
+    args: [
+      {
+        name: "name",
+        type: "string",
+      },
+    ] as DocParam[],
+    return: "string",
   } as DocElement,
   concat: {
-    description: "Undocumented",
-    args: [] as DocParam[],
-    return: "Undocumented",
+    description: "Concats strs together",
+    args: [
+      {
+        name: "...strs",
+        type: "string",
+      },
+    ] as DocParam[],
+    return: "string",
   } as DocElement,
   get: {
-    description: "Undocumented",
-    args: [] as DocParam[],
-    return: "Undocumented",
+    description: "Gets a variable by name",
+    args: [
+      {
+        name: "name",
+        type: "string",
+      },
+    ] as DocParam[],
+    return: "any",
   } as DocElement,
   set: {
-    description: "Undocumented",
-    args: [] as DocParam[],
-    return: "Undocumented",
+    description: "Set name variable to value",
+    args: [
+      {
+        name: "name",
+        type: "string",
+      },
+      {
+        name: "value",
+        type: "any",
+      },
+    ] as DocParam[],
+    return: "void",
   } as DocElement,
   getr: {
-    description: "Undocumented",
-    args: [] as DocParam[],
-    return: "Undocumented",
+    description: "Gets an ephemeral variable by name",
+    args: [
+      {
+        name: "name",
+        type: "string",
+      },
+    ] as DocParam[],
+    return: "any",
   } as DocElement,
   setr: {
-    description: "Undocumented",
-    args: [] as DocParam[],
-    return: "Undocumented",
+    description: "Sets an ephemeral variable to value",
+    args: [
+      {
+        name: "name",
+        type: "string",
+      },
+      {
+        name: "value",
+        type: "any",
+      },
+    ] as DocParam[],
+    return: "any",
   } as DocElement,
 });
