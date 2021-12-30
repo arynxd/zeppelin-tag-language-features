@@ -1,79 +1,77 @@
 import * as vscode from "vscode";
+import { DocElement, DocParam, DOC_ITEMS } from "./docs";
+import {
+  createFunctionalCompletionProvider,
+  createFunctionalHoverProvider,
+} from "./providers";
+import { getCurrentWord, FILE_ID, COMPLETION_TOKEN } from "./util";
 
-const FILE_ID = "zep";
-const COMPLETION_TOKEN = ".";
-
-const REGEX = Object.freeze({
-  user: /user/g,
-  args: /args/g,
-  member: /member/g
-});
-
-const COMPLETION_ITEMS = Object.freeze({
+const COMPLETION_ITEMS: CompletionItems = Object.freeze({
   args: ["0", "1", "2", "3", "4", "5"],
   user: ["username", "id", "discriminator", "bot", "system", "publicFlags"],
-  member: ["user", "joinedAt"]
+  member: ["user", "joinedAt"],
 });
 
-type KeyType = "args" | "user" | "member";
+interface CompletionItems {
+  [key: string]: string[];
+}
 
-function doCompletion(
-  document: vscode.TextDocument,
-  pos: vscode.Position,
-  key: KeyType
-) {
-  const line = document.lineAt(pos.line).text;
-  const position = pos.character;
-  let shouldComplete = false;
+function doCompletion(document: vscode.TextDocument, pos: vscode.Position) {
+  const word = getCurrentWord(document, pos);
 
-  // there may be multiple matches within a line
-  const matches = [...line.matchAll(REGEX[key])];
-
-  for (const match of matches) {
-    if (match.index == null) {
-      continue;
-    }
-
-    // check if we are actually completing, len + 1 for period char
-    if (match.index <= position && position <= match.index + key.length + 1) {
-      shouldComplete = true;
-    }
-  }
-
-  if (!shouldComplete) {
-    return [];
-  }
-
-  return COMPLETION_ITEMS[key].map(
-    (item) => new vscode.CompletionItem(item, vscode.CompletionItemKind.Field)
+  return (
+    COMPLETION_ITEMS[word]?.map(
+      (item) => new vscode.CompletionItem(item, vscode.CompletionItemKind.Field)
+    ) ?? []
   );
 }
 
-type ProviderCallback = (
-  document: vscode.TextDocument,
-  position: vscode.Position,
-  token?: vscode.CancellationToken,
-  context?: vscode.CompletionContext
-) => vscode.CompletionItem[];
+function argToString(arg: DocParam): string {
+  return `
+    \t${arg.name} => ${arg.type}
+  `;
+}
 
-function createFunctionalProvider(
-  callback: ProviderCallback
-): vscode.CompletionItemProvider {
-  return {
-    provideCompletionItems: (...args) => callback(...args),
-  };
+function docToString(doc: DocElement): string {
+  return `
+    ${doc.description}
+
+    - arguments: ${
+      doc.args.length ? doc.args.map(argToString).join("\n") : "none"
+    }
+    - returns: ${doc.return}
+  `;
+}
+
+function doHover(
+  document: vscode.TextDocument,
+  pos: vscode.Position
+): vscode.Hover | undefined {
+  const word = getCurrentWord(document, pos);
+
+  const item = DOC_ITEMS[word];
+
+  if (!item) {
+    return undefined;
+  }
+
+  return new vscode.Hover(
+    docToString(item),
+    document.getWordRangeAtPosition(pos)
+  );
 }
 
 export function activate(ctx: vscode.ExtensionContext): void {
-  const subscriptions = Object.keys(COMPLETION_ITEMS).map((item) =>
-    vscode.languages.registerCompletionItemProvider(
-      FILE_ID,
-      createFunctionalProvider((doc, pos) =>
-        doCompletion(doc, pos, item as KeyType)
-      ),
-      COMPLETION_TOKEN
-    )
+  const completion = vscode.languages.registerCompletionItemProvider(
+    FILE_ID,
+    createFunctionalCompletionProvider((doc, pos) => doCompletion(doc, pos)),
+    COMPLETION_TOKEN
   );
 
-  ctx.subscriptions.push(...subscriptions);
+  const hover = vscode.languages.registerHoverProvider(
+    FILE_ID,
+    createFunctionalHoverProvider((doc, pos) => doHover(doc, pos))
+  );
+
+  ctx.subscriptions.push(completion, hover);
 }

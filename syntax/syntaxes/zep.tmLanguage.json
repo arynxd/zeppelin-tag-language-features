@@ -75,11 +75,11 @@
           "match": "\\b(add|sub|mul|div|round)\\b"
         },
 
-		{
-			"comment": "Magic values",
-			"name": "support.variable",
-			"match": "\\b(user|member|args)\\b"
-		},
+        {
+          "comment": "Magic values",
+          "name": "support.variable",
+          "match": "\\b(user|member|args)\\b"
+        },
 
         {
           "name": "constant.numeric.zep",
